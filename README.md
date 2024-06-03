@@ -417,6 +417,27 @@ Btw. SemVer can go beyond single digit. If you have `v0.1.9`, you don't have to 
 for a bugfix would be `v0.1.10` and beyond. That may be obvious, but I have seen people who thought they are limited
 to 0-9 (not looking at you Microsoft, good job with MSVC 14.40 / v143).
 
+#### Failed release jobs
+
+If your release job fail for some reason, you need to fix it, obviously. But then our tag still exists, so to 
+reuse it, first we need to delete it from GitHub UI in "Tags" menu. Then, we need to delete a local tag and create it
+again.
+
+```bash
+# Make sure that you are on main and with current state
+git checkout -b main
+git pull origin main
+# Remove local tag
+git tag -d v0.1.2
+# Create a tag with version
+git tag v0.1.2 -m v0.1.2
+# Push tags to origin
+git push origin --tags
+```
+
+Instead of deleting the tag from GitHub UI, you can also `git push origin --tags --force` but don't. If we don't have
+to force-push, we don't force-push.
+
 ### Run less jobs
 
 By default, each push starts 4 build jobs and every release starts 3 (+4 from the commit). If your repository is private,
