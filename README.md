@@ -94,7 +94,7 @@ Then build and install:
 
 ```bash
 $PRESET = "x86-debug"
-cmake --build out/build/$PRESET --target all -j 10
+cmake --build out/build/$PRESET --target all -j 16
 cmake --install out/build/$PRESET --prefix out/install/$PRESET
 ```
 
@@ -150,9 +150,9 @@ deleting `out` directory or using `Nek/Clear-Build` command.
 
 #### Updating Union API dependency
 
-CMake downloads the required files for Union API during configuration from configured repositories and gets only 
+CMake downloads the required files for Union API during configuration from set repositories, and it gets only 
 the configured version. By default, the version is pinned to specific release, so we don't break someone's build
-by a Union API update.
+by an Union API update.
 
 You can update the dependencies using the PowerShell module. First, get the list of available releases.
 
@@ -172,9 +172,9 @@ To install the newest: Nek\Set-UnionApiVersion 20240602.0235
 
 ```
 
-The releases are fetch from [union-api.cmake](https://github.com/piotrmacha/union-api.cmake) repository using GitHub API.
+The releases are fetched from [union-api.cmake](https://github.com/piotrmacha/union-api.cmake) repository using GitHub API.
 
-To change the release use `Nek\Set-UnionApiVersion`. It will update `Configuration.cmake` keys.
+To change the release use `Nek\Set-UnionApiVersion`. It will update config keys in  `Configuration.cmake`
 
 ```powershell
 PS C:\dev\union-api-template> Nek\Set-UnionApiVersion 20240602.0235
@@ -190,6 +190,29 @@ Changed configuration UNION_API_VERSION = 20240602.0235
 [Binary] Union API version:     20240602.0235
 
 Run CMake configure again to apply the changes. You may need to Nek\Clear-Build first.
+```
+
+Important information is that `UNION_API_COMMIT_REF` format depends on the input. If it starts with `202` or `v`, we
+add `tags/` to the beginning, because it's a version tag. In other cases, we assume that the provided version is a valid
+Git ref (branch, commit hash). If something is wrong, you can always fix it manually in `Configuration.cmake`.
+
+You can also set the config keys to always download latest version. I don't recommend that, because an update can
+break something in your build and should be tested first, but if you'd like to:
+
+```
+# Configuration.cmake
+# ...
+# For SOURCE builds
+set(UNION_API_COMMIT_REF "main"
+        CACHE STRING "The Git branch or commit ref to download" FORCE)
+# ...
+# For BINARY builds
+# Change URL because it's different for latest release
+set(UNION_API_URL "https://github.com/piotrmacha/union-api.cmake/releases/releases/{version}/download/{package}.zip"
+        CACHE STRING "The URL to download the Union API release. Use {version} and {package} replacements" FORCE)
+set(UNION_API_VERSION "latest"
+        CACHE STRING "The version of Union API build from https://github.com/piotrmacha/union-api.cmake/releases/" FORCE)
+# ...        
 ```
 
 ## Source code structure

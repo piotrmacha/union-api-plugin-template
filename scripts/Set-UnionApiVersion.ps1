@@ -26,7 +26,7 @@ function Set-UnionApiVersion
     Write-Host "[Binary] Union API version:`t" -NoNewline
     Write-Host -ForegroundColor Yellow "$($current.Binary)"
 
-    $includeTag = $Version.StartsWith("202") # Let's make an 2030 millenium problem
+    $includeTag = $Version.StartsWith("202") or $Version.StartsWith("v") # Let's make an 2030 millenium problem
 
     SetConfigProperty -Name "UNION_API_COMMIT_REF" -Value "$($includeTag ? "tags/$Version" : $Version)"
     SetConfigProperty -Name "UNION_API_VERSION" -Value "$Version"
