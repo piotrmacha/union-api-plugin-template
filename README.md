@@ -464,7 +464,8 @@ and this is the only reasonable way of running public runners.
 ### Other CI systems
 
 The template doesn't have any prepared pipelines for other CI (excl. Gitea which is compatible with GitHub Actions, just rename .github to .gitea).
-You can create such pipeline yourself based on the GitHub workflows, and if you do, please with open a Pull Request :)
+
+You can create such pipeline yourself based on the GitHub workflows, and if you do, please open a Pull Request :)
 
 ## License
 
