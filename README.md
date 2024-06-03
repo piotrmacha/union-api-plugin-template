@@ -130,7 +130,12 @@ Nek    Set-UnionApiVersion     Nek\Set-UnionApiVersion [version] Sets the Union 
 
 ```
 
-To get help for some command, run `Get-Help Nek\NameOfCommand` with the command name. 
+To get help for some command, run `Get-Help Nek\NameOfCommand` with the command name.
+
+#### Clear build directory
+
+The best solution for CMake issues is to clear the output directory with its cache. You can do it either manually by
+deleting `out` directory or using `Nek/Clear-Build` command.
 
 #### Updating Union API dependency
 
@@ -247,6 +252,18 @@ every engine version. That's way the includes are in one file, and you should no
 inside them. Including external files (like `YourProjectName/`) is fine and files in it should have `#pragma once`
 or include guards.
 
+### Gothic UserAPI
+
+Gothic UserAPI files are included by Gothic API in that order:
+
+```
+userapi/
+<Union API>/ZenGin/Gothic_UserAPI/
+```
+
+The local directory takes precedence over the default directory so you only have to copy the files you would like
+to override. Full list of available files: https://gitlab.com/union-framework/gothic-api/-/tree/main/ZenGin/Gothic_UserAPI
+
 ### Disable or limit multiplatform
 
 If you would like to build the project only for a single engine or a limited set of engines, disable them using `Configuration.cmake`.
@@ -311,3 +328,13 @@ set_target_properties(${PLUGIN_LIBRARY} PROPERTIES
 #   # Setup VCPKG or Conan separately, the template doesn't have any shortcuts
 #   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib::SomeTarget)
 ```
+
+## License
+
+The template is licensed under [MIT License](LICENSE.md). 
+
+[union-api](https://gitlab.com/union-framework/union-api)
+and [gothic-api](https://gitlab.com/union-framework/gothic-api) are licensed
+under [GNU GENERAL PUBLIC LICENSE V3](https://gitlab.com/union-framework/union-api-/blob/main/LICENSE).
+
+GothicVDFS 2.6 [Copyright (c) 2001-2003, Nico Bendlin, Copyright (c) 1994-2002, Peter Sabath / TRIACOM Software GmbH](vdf/GothicVFS.License.txt)

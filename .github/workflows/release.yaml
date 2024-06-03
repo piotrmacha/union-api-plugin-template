@@ -44,7 +44,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: release-dll
-          path: out/install/x86-release/bin/
+          path: out/install/x86-release/
       - name: Download Release VDF
         uses: actions/download-artifact@v4
         with:
@@ -81,11 +81,14 @@ jobs:
         run: |
           $project = (Get-Content -Path Configuration.cmake | Select-String -Pattern "PROJECT_NAME `"([^`"]+)`"").Matches[0].Groups[1].Value
           $tag = $env:GITHUB_REF -replace '^refs/tags/', ''
-          Compress-Archive out/install/x86-release/bin/* $project-${tag}.zip
+          $files = Get-ChildItem -Path out/install/x86-release/ -Exclude *.vdf 
+          Compress-Archive $files $project-${tag}.zip
           Copy-Item out/install/x86-release/$project.vdf $project-${tag}.vdf
-          Compress-Archive out/install/x86-relwithdebinfo/bin/* $project-${tag}-RelWithDebInfo.zip
+          $files = Get-ChildItem -Path out/install/x86-relwithdebinfo/ -Exclude *.vdf
+          Compress-Archive $files $project-${tag}-RelWithDebInfo.zip
           Copy-Item out/install/x86-relwithdebinfo/$project.vdf $project-${tag}-RelWithDebInfo.vdf
-          Compress-Archive out/install/x86-minsizerel/bin/* $project-${tag}-MinSizeRel.zip
+          $files = Get-ChildItem -Path out/install/x86-minsizerel/ -Exclude *.vdf
+          Compress-Archive $files $project-${tag}-MinSizeRel.zip
           Copy-Item out/install/x86-minsizerel/$project.vdf $project-${tag}-MinSizeRel.vdf
           $prerelease = if (-not ($tag -match '^v?(\d+\.\d+\.\d+)$')) { 'true' } else { 'false' }
           echo "prerelease=${prerelease}" >> $env:GITHUB_OUTPUT
