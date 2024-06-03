@@ -380,7 +380,7 @@ by other workflows.
 one for every build type, to verify that the plugin compiles.
 
 `release.yaml` runs on tags starting with `v` (e.g. `v0.0.1`). Release starts 3 builds (Release, RelWithDebInfo, MinSizeRel), 
-then it creates a GitHub Release and uploads the artifacts ready to include in game. Changelog is generated automatically from
+then it creates a GitHub Release and uploads the artifacts ready to be included in game. Changelog is generated automatically from
 Pull Requests. It's highly recommended to use Semantic Versioning for versions. CMake requires the format with 3 or 4 numbers
 separated by a dot (0.1.2 or 0.1.2.3) but you can freely use formats like "v0.1.2", "v0.1.2-rc3", "v0.1.2.3", "v0.1.2.3-rc4"
 because the build job strips all characters that are not a digit or a dot. As said before, best if you just use 
