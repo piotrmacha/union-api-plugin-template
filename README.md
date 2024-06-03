@@ -150,9 +150,9 @@ deleting `out` directory or using `Nek/Clear-Build` command.
 
 #### Updating Union API dependency
 
-CMake downloads the required files for Union API during configuration from set repositories, and it gets only 
+CMake downloads the required files for Union API during configuration stage from the defined repository, and it gets only 
 the configured version. By default, the version is pinned to specific release, so we don't break someone's build
-by an Union API update.
+by a Union API update.
 
 You can update the dependencies using the PowerShell module. First, get the list of available releases.
 
@@ -208,7 +208,7 @@ set(UNION_API_COMMIT_REF "main"
 # ...
 # For BINARY builds
 # Change URL because it's different for latest release
-set(UNION_API_URL "https://github.com/piotrmacha/union-api.cmake/releases/releases/{version}/download/{package}.zip"
+set(UNION_API_URL "https://github.com/piotrmacha/union-api.cmake/releases/{version}/download/{package}.zip"
         CACHE STRING "The URL to download the Union API release. Use {version} and {package} replacements" FORCE)
 set(UNION_API_VERSION "latest"
         CACHE STRING "The version of Union API build from https://github.com/piotrmacha/union-api.cmake/releases/" FORCE)
