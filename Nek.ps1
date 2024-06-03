@@ -47,7 +47,7 @@ foreach ($command in $module.ExportedCommands.Values)
     }
     $functions += [PSCustomObject]@{
         Module = $command.Module.Name
-        "Name$spaces" = $command.Name
+        Namespace = $command.Name
         Usage = $help.Description.Text
         About = $about.Synopsis
         Arguments = $params
