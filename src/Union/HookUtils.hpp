@@ -24,8 +24,6 @@ namespace Union
 
     void* FindSignatureAddress(Signature&& sig)
     {
-        auto s = SIGNATURE_OF(&VDFS::GetVirtualFileList);
-        FindSignatureAddress(s);
         return FindSignatureAddress(sig);
     }
 
