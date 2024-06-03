@@ -21,7 +21,8 @@ starting a Union API project and quality of life features:
 * [Usage](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#usage)
 * [Build](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#build)
 * [PowerShell Module](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#powershell-module)
-* [Source Code Structure](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#source-code-structure)
+* [Source code structure](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#source-code-structure)
+* [Linking other libraries](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#linking-other-libraries)
 
 ## Requirements
 
@@ -175,7 +176,7 @@ Changed configuration UNION_API_VERSION = 20240602.0235
 Run CMake configure again to apply the changes. You may need to Nek\Clear-Build first.
 ```
 
-## Source Code Structure
+## Source code structure
 
 The source code is located in `src/` for the plugin sources and `userapi/` for .inl files included by Gothic API.
 
@@ -280,3 +281,33 @@ auto CGameManager_Init_Ivk = Union::CreateHook(
 ```
 
 Only Gothic classes are supported by this method. If you need to hook some other code, you have to use an address.
+
+## Linking other libraries
+
+To link other libraries you have to edit `CMakePresets.cmake`. The best place for it is right after the plugin definition.
+```cmake
+add_library(${PLUGIN_LIBRARY} SHARED ${PLUGIN_SOURCES})
+target_include_directories(${PLUGIN_LIBRARY} PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/generated)
+target_include_directories(${PLUGIN_LIBRARY} PRIVATE BEFORE ${CMAKE_SOURCE_DIR}/userapi)
+set_target_properties(${PLUGIN_LIBRARY} PROPERTIES
+        OUTPUT_NAME ${OUTPUT_BINARY_NAME})
+
+# Here you can link other libaries using, for example:
+# Subdirectories:
+#   add_subdirectory(library_sub_dir)
+#   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib)
+#
+# FindPackage:
+#   find_package(SomeLib CONFIG REQUIRED)   
+#   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib::SomeTarget)
+#
+# FetchContent:
+#   include(FetchContent)
+#   FetchContent_Declare(SomeLib GIT_REPOSITORY git@github.com:SomeAuthor/SomeRepo.git GIT_TAG main)
+#   FetchContent_MakeAvailable(SomeLib)
+#   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib::SomeTarget)
+#
+# VCPKG/Conan
+#   # Setup VCPKG or Conan separately, the template doesn't have any shortcuts
+#   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib::SomeTarget)
+```
