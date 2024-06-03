@@ -222,7 +222,7 @@ The source code is located in `src/` for the plugin sources and `userapi/` for .
 Entrypoint `Plugin.cpp` takes care of setting up [Multiplatform build](https://gitlab.com/union-framework/gothic-api/-/wikis/Multiplatform-development)
 and the `Plugin.hpp` contains the actual code (or `#include` directives). An important thing to know is that the
 `Plugin.hpp` is included 4 times, once for every game engine, and all code resides in the final binary, so you
-have to take care proper includes and global variables using Gothic classes.
+have to take care of proper includes and global variables using Gothic classes.
 Read the  [Multiplatform docs](https://gitlab.com/union-framework/gothic-api/-/wikis/Multiplatform-development)
 to better understand what can go wrong and how to write safe code.
 
