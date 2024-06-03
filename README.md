@@ -19,11 +19,20 @@ starting a Union API project and quality of life features:
 
 * [Requirements](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#requirements)
 * [Usage](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#usage)
-* [Build](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#build)
-* [PowerShell Module](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#powershell-module)
+  * [Build](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#build)
+  * [PowerShell Module](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#powershell-module)
 * [Source code structure](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#source-code-structure)
+  * [Suggested project structure](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#suggested-project-structure)
+  * [Gothic UserAPI](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#gothic-userapi)
+  * [Disable or limit multiplatform](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#disable-or-limit-multiplatform)
+  * [BuildInfo.h](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#buildinfoh)
+  * [HookUtils.h](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#hookutilsh)
 * [Linking other libraries](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#linking-other-libraries)
 * [GitHub Actions](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#github-actions)
+  * [Release job](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#release-job)
+  * [Run less jobs](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#run-less-jobs)
+  * [Self-hosted runner](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#self-hosted-runner)
+  * [Other CI systems](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#other-ci-systems)
 * [License](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#license)
 
 ## Requirements
@@ -348,6 +357,37 @@ separated by a dot (0.1.2 or 0.1.2.3) but you can freely use formats like "v0.1.
 because the build job strips all characters that are not a digit or a dot. As said before, best if you just use 
 [Semantic Versioning](https://semver.org/).
 
+### Release job
+
+To trigger the release job, you have to create and push a tag. You can't create a tag on GitHub UI without creating a
+release, so we need to do it in the console.
+
+```bash
+# Make sure that you are on main and with current state
+git checkout -b main
+git pull origin main
+# Create a tag with version
+git tag v0.1.2 -m v0.1.2
+# Push tags to origin
+git push origin --tags
+```
+
+The workflow for release will trigger, and soon it will create a release on GitHub. Best strategy for versioning is 
+using [Semantic Versioning](https://semver.org/) with following suggestions:
+
+* `v0.y.z` - development stage, plugin not stable
+* `v1.y.z` - stable plugin was published 
+* `y` - increment on every new feature (reset `z` to 0)
+* `z` - increment on every bug fix 
+
+You would rather not bump the first segment beyond `1` because it means that the change is not backwards compatible, 
+and it's hard to define compatibility in a Union plugin. It makes sense for libraries but for plugins you can stay 
+with `1` or bump it only for very huge releases just for the flex. Up to you. 
+
+Btw. SemVer can go beyond single digit. If you have `v0.1.9`, you don't have to create `v0.2.0`. The correct bump
+for a bugfix would be `v0.1.10` and beyond. That may be obvious, but I have seen people who thought they are limited
+to 0-9 (not looking at you Microsoft, good job with MSVC 14.40 / v143).
+
 ### Run less jobs
 
 By default, each push starts 4 build jobs and every release starts 3 (+4 from the commit). If your repository is private,
@@ -357,8 +397,24 @@ and you would like to not waste the CI minutes, you can remove some jobs from th
 * `release.yaml`: remove build job from `jobs:`, remove download action from `jobs.publish.steps:`, remove `Compress-Archive` 
   and `Copy-Item` pair from the PowerShell script in `jobs.publish.steps.[id: prepare-release]`.
 
+### Self-hosted runner
+
 You can also set up a [self-hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
-To do it, you would need to set up 
+To do it, you would need to set up a Windows Server 2022 (or Windows 10/11) on some host with Internet access (public IP not required) and
+install Visual Studio 2022 with MSVC 14.39, CMake and the GitHub Runner agent on it. You can use other MSVC versions if
+you update them in the workflows YAMLs. This setup should work well with our workflows.
+
+**Never setup self-hosted runner on a public repository**. Unless you can secure it for executing completely arbitrary 
+code from very bad people(1) :)
+
+(1) Tricky question. Instead of trying to secure such runner, the proper way is to spin an ephemeral VM for every action 
+run with full network and storage isolation, and then destroy it after workflow execution. That's how GitHub is doing it,
+and this is the only reasonable way of running public runners.
+
+### Other CI systems
+
+The template doesn't have any prepared pipelines for other CI (ex. Gitea which is compatible with GitHub Actions, just rename .github to .gitea).
+You can create such pipeline yourself based on the GitHub workflows, and if you do, please with open a Pull Request :)
 
 ## License
 
