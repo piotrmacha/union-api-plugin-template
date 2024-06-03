@@ -17,12 +17,14 @@ starting a Union API project and quality of life features:
 
 ## Table of Contents
 
-* [Requiements](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#requirements)
+* [Requirements](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#requirements)
 * [Usage](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#usage)
 * [Build](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#build)
 * [PowerShell Module](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#powershell-module)
 * [Source code structure](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#source-code-structure)
 * [Linking other libraries](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#linking-other-libraries)
+* [GitHub Actions](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#github-actions)
+* [License](https://github.com/piotrmacha/union-api-plugin-template?tab=readme-ov-file#license)
 
 ## Requirements
 
@@ -328,6 +330,8 @@ set_target_properties(${PLUGIN_LIBRARY} PROPERTIES
 #   # Setup VCPKG or Conan separately, the template doesn't have any shortcuts
 #   target_link_libraries(${PLUGIN_LIBRARY} PRIVATE SomeLib::SomeTarget)
 ```
+
+## GitHub Actions
 
 ## License
 

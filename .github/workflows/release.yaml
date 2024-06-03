@@ -40,6 +40,9 @@ jobs:
       - build-relwithdebinfo
       - build-minsizerel
     steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - name: Download Release DLL
         uses: actions/download-artifact@v4
         with:
@@ -54,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: relwithdebinfo-dll
-          path: out/build/x86-relwithdebinfo/
+          path: out/install/x86-relwithdebinfo/
       - name: Download RelWithDebInfo VDF
         uses: actions/download-artifact@v4
         with:
@@ -64,21 +67,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: minsizerel-dll
-          path: out/build/x86-minsizerel/
+          path: out/install/x86-minsizerel/
       - name: Download MinSizeRel VDF
         uses: actions/download-artifact@v4
         with:
           name: minsizerel-vdf
           path: out/install/x86-minsizerel/
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Prepare Release Files
         id: prepare-release
         shell: powershell
         env:
           GITHUB_REF: ${{ github.ref_name }}
         run: |
+          tree /F
           $project = (Get-Content -Path Configuration.cmake | Select-String -Pattern "PROJECT_NAME `"([^`"]+)`"").Matches[0].Groups[1].Value
           $tag = $env:GITHUB_REF -replace '^refs/tags/', ''
           $files = Get-ChildItem -Path out/install/x86-release/ -Exclude *.vdf 
@@ -86,7 +87,7 @@ jobs:
           Copy-Item out/install/x86-release/$project.vdf $project-${tag}.vdf
           $files = Get-ChildItem -Path out/install/x86-relwithdebinfo/ -Exclude *.vdf
           Compress-Archive $files $project-${tag}-RelWithDebInfo.zip
-          Copy-Item out/install/x86-relwithdebinfo/$project.vdf $project-${tag}-RelWithDebInfo.vdf
+          Copy-Item out/install/x86-relwithdebinfo/*.vdf $project-${tag}-RelWithDebInfo.vdf
           $files = Get-ChildItem -Path out/install/x86-minsizerel/ -Exclude *.vdf
           Compress-Archive $files $project-${tag}-MinSizeRel.zip
           Copy-Item out/install/x86-minsizerel/$project.vdf $project-${tag}-MinSizeRel.vdf
