@@ -2,7 +2,7 @@
 
 Template repository for creating Union plugins based on the [Union API](https://gitlab.com/union-framework/union-api)
 and [Gothic API](https://gitlab.com/union-framework/gothic-api) projects. It's created to provide an easy way of 
-starting a Union API project and quality of life features:
+starting a Union API project and includes quality of life features:
 
 * CMake as the build system generator
 * Union API and Gothic API are downloaded as a source code to build or as a prebuilt library
