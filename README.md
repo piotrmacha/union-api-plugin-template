@@ -240,7 +240,7 @@ There are also `Plugin_[ENGINE].hpp` files, which are included only for specific
 
 ### Suggested project structure
 
-You can structure the code however you like, but for good separation of concerns I suggest following split:
+You can structure the code however you'd like, but for a good separation of concerns I suggest following split:
 
 ```
 src/
