@@ -55,8 +55,8 @@ jobs:
           Set-Content -Path Configuration.override.cmake -Value $output
       - name: CMake Configure
         run: cmake --preset ${{ inputs.cmake-preset }}
-      - name: Ninja Build
-        run: ninja -C out/build/${{ inputs.cmake-preset }} -j 20
+      - name: CMake Build
+        run: cmake --preset ${{ inputs.cmake-preset }} --build out/build/${{ input.cmake-preset }} --target all -j 10
       - name: CMake Install
         run: cmake --install out/build/${{ inputs.cmake-preset }} --prefix out/install/${{ inputs.cmake-preset }}
       - name: Archive DLL
