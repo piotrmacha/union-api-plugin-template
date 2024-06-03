@@ -42,13 +42,13 @@ set(COPY_BUILD_VDF_DATA_DIRECTORY "Data"
 if(${UNION_API_FETCH_TYPE} STREQUAL "SOURCE")
     set(UNION_API_URL "https://github.com/piotrmacha/union-api.cmake"
             CACHE STRING "The URL to Git repository with CMake targets of Union API" FORCE)
-    set(UNION_API_COMMIT_REF "tags/20240602.0235"
+    set(UNION_API_COMMIT_REF "tags/20240603.1019"
             CACHE STRING "The Git branch or commit ref to download" FORCE)
 
 elseif(${UNION_API_FETCH_TYPE} STREQUAL "BINARY")
     set(UNION_API_URL "https://github.com/piotrmacha/union-api.cmake/releases/download/{version}/{package}.zip"
             CACHE STRING "The URL to download the Union API release. Use {version} and {package} replacements" FORCE)
-    set(UNION_API_VERSION "20240602.0235"
+    set(UNION_API_VERSION "20240603.1019"
             CACHE STRING "The version of Union API build from https://github.com/piotrmacha/union-api.cmake/releases/" FORCE)
     set(UNION_API_PACKAGE "UnionAPI-v143-windows-2022"
             CACHE STRING "The name of a release artifact to download from repository" FORCE)

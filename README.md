@@ -41,6 +41,38 @@ starting a Union API project and includes quality of life features:
 * CMake 3.28+
 * PowerShell 7+ (optional)
 
+## Dependencies
+
+The template project downloads Union API and Gothic API from [union-api.cmake](https://github.com/piotrmacha/union-api.cmake)
+that's non-official CMake Targets for Union API. The CMake repository fetches Union API and Gothic API directly from
+respective sources. It's convenient, because we don't need to include the CMake configuration for Union API here, and
+we can use prebuilt libraries instead of source compilation. The drawback is that the CMake repository may not have
+the newest Union API version, however I'll do my best to keep it updated, and you can't download arbitrary Union API
+versions not provided by union-api.cmake.
+
+If you have concerns about using a non-official repo as the source for dependencies, or you'd like to change Union API code,
+feel free to clone the union-api.cmake repository and change the URLs in `Configuration.cmake`. You can also download it
+locally and modify `cmake/FindUnionAPI.cmake` to use `add_subdirectory(path/to/local)` for SOURCE builds instead of 
+`FetchContent`. It would look like this:
+
+```cmake
+    if(${UNION_API_FETCH_TYPE} STREQUAL "SOURCE")
+        # Comment out or delete FetchContent
+        #FetchContent_Declare(UnionAPI GIT_REPOSITORY ${UNION_API_URL} GIT_TAG ${UNION_API_COMMIT_REF})
+        #FetchContent_MakeAvailable(UnionAPI)
+        #FetchContent_GetProperties(UnionAPI SOURCE_DIR UnionAPI_SOURCES)
+        # Set UnionAPI_SOURCES variable to point to the union-api.cmake directory 
+        set(UnionAPI_SOURCES ${CMAKE_SOURCE_DIR}/union-api.cmake) 
+        # Add subdirectory with Union API
+        add_subdirectory(${UnionAPI_SOURCES})
+        # The rest of the code stays the same
+        set(UnionAPI_INCLUDE ${UnionAPI_SOURCES}/union-api/union-api)
+        set(UnionAPI_LIB_SHARED UnionAPI)
+        set(UnionAPI_LIB_STATIC UnionAPIStatic)
+        set(GothicAPI_INCLUDE ${UnionAPI_SOURCES}/gothic-api)
+        set(GothicAPI_LIB GothicAPI)
+```
+
 ## Usage
 
 Click "Use this template" on GitHub (top-right, green) or download the repository as a ZIP file ("Code" button -> Download ZIP).
@@ -159,17 +191,17 @@ You can update the dependencies using the PowerShell module. First, get the list
 ```powershell
 PS C:\dev\union-api-template> Nek\Get-UnionApiVersion
 Union API fetch:        BINARY
-Union API version:      20240602.0235
+Union API version:      20240603.1019
 
 Version              Union API Ref                            Gothic API Ref                           Date
 -------------------- -------------                            --------------                           ----
+20240603.1019        406e3fb32232300bae2ff2ee0018685c15c7f1ef 102f42aaf6fe2f2c9c296f8ec66ee8fcde08d646 03.06.2024 08:21:46
 20240602.0235        406e3fb32232300bae2ff2ee0018685c15c7f1ef 102f42aaf6fe2f2c9c296f8ec66ee8fcde08d646 02.06.2024 00:38:01
 20240602.0024        406e3fb32232300bae2ff2ee0018685c15c7f1ef 102f42aaf6fe2f2c9c296f8ec66ee8fcde08d646 01.06.2024 22:26:30
 20240601.1424        102f42aaf6fe2f2c9c296f8ec66ee8fcde08d646 unknonw                                  01.06.2024 12:26:12
 
 To change the version: Nek\Set-UnionApiVersion [version]
-To install the newest: Nek\Set-UnionApiVersion 20240602.0235
-
+To install the newest: Nek\Set-UnionApiVersion 20240603.1019
 ```
 
 The releases are fetched from [union-api.cmake](https://github.com/piotrmacha/union-api.cmake) repository using GitHub API.
@@ -177,17 +209,17 @@ The releases are fetched from [union-api.cmake](https://github.com/piotrmacha/un
 To change the release use `Nek\Set-UnionApiVersion`. It will update config keys in  `Configuration.cmake`
 
 ```powershell
-PS C:\dev\union-api-template> Nek\Set-UnionApiVersion 20240602.0235
+PS C:\dev\union-api-template> Nek\Set-UnionApiVersion 20240603.1019
 [Source] Union API commitRef:   tags/20240602.0235
 [Source] Union API version:     20240602.0235
 [Binary] Union API version:     20240602.0235
 Changed configuration UNION_API_COMMIT_REF = tags/20240602.0235
-             to value UNION_API_COMMIT_REF = tags/20240602.0235
+             to value UNION_API_COMMIT_REF = tags/20240603.1019
 Changed configuration UNION_API_VERSION = 20240602.0235
-             to value UNION_API_VERSION = 20240602.0235
-[Source] Union API commitRef:   tags/20240602.0235
-[Source] Union API version:     20240602.0235
-[Binary] Union API version:     20240602.0235
+             to value UNION_API_VERSION = 20240603.1019
+[Source] Union API commitRef:   tags/20240603.1019
+[Source] Union API version:     20240603.1019
+[Binary] Union API version:     20240603.1019
 
 Run CMake configure again to apply the changes. You may need to Nek\Clear-Build first.
 ```
