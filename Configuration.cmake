@@ -1,7 +1,7 @@
 set(PROJECT_NAME "MyPlugin"
         CACHE STRING "The name of the project" FORCE)
 set(PROJECT_VERSION "0.0.1"
-        CACHE STRING "Project version following Semantic Versioning, set it using scripts/set-version.ps1" FORCE)
+        CACHE STRING "Project version. It's automatically override by GitHub Actions on Release" FORCE)
 set(PROJECT_VERSION_CMAKE "0.0.1"
         CACHE STRING "Project version for CMake, because it requires strictly up to 4 numbers, no letters allowed" FORCE)
 set(PLUGIN_LIBRARY ${PROJECT_NAME}
