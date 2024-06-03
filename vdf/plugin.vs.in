@@ -1,0 +1,8 @@
+[BEGINVDF]
+Comment=@VDF_COMMENT@
+BaseDir=@VDF_BASE_DIR@
+VDFName=@VDF_NAME@
+[FILES]
+System\Autorun\*.dll
+System\Autorun\Signatures\*.tsv
+[ENDVDF]

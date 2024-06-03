@@ -1,0 +1,102 @@
+﻿name: Release
+run-name: Release ${{ github.ref_name }}
+permissions: write-all
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    name: Build Release
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-release
+      upload-artifact-dll: release-dll
+      upload-artifact-vdf: release-vdf
+      project-version: ${{ github.ref_name }}
+  build-relwithdebinfo:
+    name: Build RelWithDebInfo
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-relwithdebinfo
+      upload-artifact-dll: relwithdebinfo-dll
+      upload-artifact-vdf: relwithdebinfo-vdf
+      project-version: ${{ github.ref_name }}
+  build-minsizerel:
+    name: Build MinSizeRel
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-minsizerel
+      upload-artifact-dll: minsizerel-dll
+      upload-artifact-vdf: minsizerel-vdf
+      project-version: ${{ github.ref_name }}
+  publish:
+    name: Publish Release
+    runs-on: windows-2022
+    needs:
+      - build-release
+      - build-relwithdebinfo
+      - build-minsizerel
+    steps:
+      - name: Download Release DLL
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dll
+          path: out/install/x86-release/bin/
+      - name: Download Release VDF
+        uses: actions/download-artifact@v4
+        with:
+          name: release-vdf
+          path: out/install/x86-release/
+      - name: Download RelWithDebInfo DLL
+        uses: actions/download-artifact@v4
+        with:
+          name: relwithdebinfo-dll
+          path: out/build/x86-relwithdebinfo/
+      - name: Download RelWithDebInfo VDF
+        uses: actions/download-artifact@v4
+        with:
+          name: relwithdebinfo-vdf
+          path: out/install/x86-relwithdebinfo/
+      - name: Download MinSizeRel DLL
+        uses: actions/download-artifact@v4
+        with:
+          name: minsizerel-dll
+          path: out/build/x86-minsizerel/
+      - name: Download MinSizeRel VDF
+        uses: actions/download-artifact@v4
+        with:
+          name: minsizerel-vdf
+          path: out/install/x86-minsizerel/
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Prepare Release Files
+        id: prepare-release
+        shell: powershell
+        env:
+          GITHUB_REF: ${{ github.ref_name }}
+        run: |
+          $project = (Get-Content -Path Configuration.cmake | Select-String -Pattern "PROJECT_NAME `"([^`"]+)`"").Matches[0].Groups[1].Value
+          $tag = $env:GITHUB_REF -replace '^refs/tags/', ''
+          Compress-Archive out/install/x86-release/bin/* $project-${tag}.zip
+          Copy-Item out/install/x86-release/$project.vdf $project-${tag}.vdf
+          Compress-Archive out/install/x86-relwithdebinfo/bin/* $project-${tag}-RelWithDebInfo.zip
+          Copy-Item out/install/x86-relwithdebinfo/$project.vdf $project-${tag}-RelWithDebInfo.vdf
+          Compress-Archive out/install/x86-minsizerel/bin/* $project-${tag}-MinSizeRel.zip
+          Copy-Item out/install/x86-minsizerel/$project.vdf $project-${tag}-MinSizeRel.vdf
+          $prerelease = if (-not ($tag -match '^v?(\d+\.\d+\.\d+)$')) { 'true' } else { 'false' }
+          echo "prerelease=${prerelease}" >> $env:GITHUB_OUTPUT
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ github.token }}
+          generate_release_notes: true
+          fail_on_unmatched_files: false
+          draft: false
+          prerelease: ${{ steps.prepare-release.outputs.prerelease }}
+          files: |
+            *.zip
+            *.vdf

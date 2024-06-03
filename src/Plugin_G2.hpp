@@ -1,0 +1,4 @@
+namespace GOTHIC_NAMESPACE
+{
+
+}

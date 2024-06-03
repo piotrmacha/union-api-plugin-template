@@ -1,0 +1,42 @@
+﻿name: On Push
+run-name: Build ${{ github.ref }}
+permissions: write-all
+
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+  push:
+    branches: [ "main", "dev" ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+ 
+jobs:
+  build-debug:
+    name: Build Debug
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-debug
+      upload-artifact-dll: debug-dll
+      upload-artifact-vdf: debug-vdf
+  build-release:
+    name: Build Release
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-release
+      upload-artifact-dll: release-dll
+      upload-artifact-vdf: release-vdf
+  build-relwithdebinfo:
+    name: Build RelWithDebInfo
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-relwithdebinfo
+      upload-artifact-dll: relwithdebinfo-dll
+      upload-artifact-vdf: relwithdebinfo-vdf
+  build-minsizerel:
+    name: Build MinSizeRel
+    uses: ./.github/workflows/build.yaml
+    with:
+      cmake-preset: x86-minsizerel
+      upload-artifact-dll: minsizerel-dll
+      upload-artifact-vdf: minsizerel-vdf
