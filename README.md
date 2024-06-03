@@ -126,8 +126,8 @@ Use this for development to not copy the files manually a milion times.
 
 ### PowerShell Module
 
-The project includes a PowerShell module help with repository management. To run it, **you need PowerShell 7**,
-and the default installation for Windows is 5.1, so if you haven't yet, download and install PowerShell 7.
+The project includes a PowerShell module to help with repository management. To run it, **you need PowerShell 7**,
+and the default installation for Windows is 5.1, so if you haven't done it yet, [download and install PowerShell 7](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.4).
 To activate the module, run `Nek.ps1`.
 
 ```powershell
