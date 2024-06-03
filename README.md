@@ -244,7 +244,7 @@ You can structure the code however you'd like, but for a good separation of conc
 
 ```
 src/
-    YourProjectName/ (
+    YourProjectName/
         # files that don't depend on Gothic API and in namespace "YourProjectName"
     Gothic/
         # .hpp files that depend on Gothic API
