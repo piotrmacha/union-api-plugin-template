@@ -245,7 +245,7 @@ You can structure the code however you'd like, but for a good separation of conc
 ```
 src/
     YourProjectName/
-        # files that don't depend on Gothic API and in namespace "YourProjectName"
+        # files that don't depend on Gothic API and are in namespace "YourProjectName"
     Gothic/
         # .hpp files that depend on Gothic API
         SomeModuleName/
@@ -283,12 +283,14 @@ Then your `Gothic.hpp` would contain only `#include`s to the files inside `Gothi
 
 All headers in `Gothic/` must not contain `#pragma once` or any include guards, because we need to load them for 
 every engine version. That's way the includes are in one file, and you should not include other `Gothic/` files 
-inside them. Including external files (like `YourProjectName/`) is fine and files in it should have `#pragma once`
-or include guards.
+inside themselves (excl. `Gothic.hpp` and module roots). 
+Including external files (like `YourProjectName/`) is fine and there you should use `#pragma once` or include guards.
+
+For an example of this structure, you can have a look at [zBassMusic](https://github.com/Silver-Ore-Team/zBassMusic).
 
 ### Gothic UserAPI
 
-Gothic UserAPI files are included by Gothic API in that order:
+Gothic UserAPI files are included in that order:
 
 ```
 userapi/
@@ -296,7 +298,7 @@ userapi/
 ```
 
 The local directory takes precedence over the default directory so you only have to copy the files you would like
-to override. Full list of available files: https://gitlab.com/union-framework/gothic-api/-/tree/main/ZenGin/Gothic_UserAPI
+to override. Full list of available files is here: https://gitlab.com/union-framework/gothic-api/-/tree/main/ZenGin/Gothic_UserAPI
 
 ### Disable or limit multiplatform
 
@@ -332,6 +334,10 @@ auto CGameManager_Init_Ivk = Union::CreateHook(
 ```
 
 Only Gothic classes are supported by this method. If you need to hook some other code, you have to use an address.
+
+The signature files are generated from Gothic API `Names.txt` using [Convert-Gothic-Names.ps1](scripts/Convert-Gothic-Names.ps1)
+and placed in the build artifacts inside `Singatures/*.tsv`. If you install the plugin in physical Autorun, you also 
+have to copy the `Signatures` directory. VDF build already packs them inside the archive.  
 
 ## Linking other libraries
 
@@ -436,7 +442,7 @@ and this is the only reasonable way of running public runners.
 
 ### Other CI systems
 
-The template doesn't have any prepared pipelines for other CI (ex. Gitea which is compatible with GitHub Actions, just rename .github to .gitea).
+The template doesn't have any prepared pipelines for other CI (excl. Gitea which is compatible with GitHub Actions, just rename .github to .gitea).
 You can create such pipeline yourself based on the GitHub workflows, and if you do, please with open a Pull Request :)
 
 ## License
