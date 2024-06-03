@@ -11,11 +11,6 @@ add_custom_target(BuildVDF
         COMMAND powershell -file ${CMAKE_SOURCE_DIR}\\vdf\\Build-VDF.ps1 ${CMAKE_BINARY_DIR}
         VERBATIM)
 
-install(FILES ${CMAKE_BINARY_DIR}/plugin.vs TYPE BIN)
-install(CODE "execute_process(COMMAND powershell -file ${CMAKE_SOURCE_DIR}/vdf/Build-VDF.ps1 ${CMAKE_INSTALL_PREFIX}/bin)")
-install(CODE "execute_process(COMMAND del /y /q ${CMAKE_INSTALL_PREFIX}/bin/plugin.vs)")
-install(CODE "execute_process(COMMAND rd /s /q ${CMAKE_INSTALL_PREFIX}/bin/vdf/)")
-
 if(${COPY_BUILD_VDF_DATA})
     if((${UNION_API_FETCH_TYPE} STREQUAL "BINARY") AND (${UNION_API_LINK_TYPE} STREQUAL "SHARED"))
         file(COPY ${CMAKE_BINARY_DIR}/union-api/bin/${CMAKE_BUILD_TYPE}/UnionAPI.dll DESTINATION ${CMAKE_BINARY_DIR})

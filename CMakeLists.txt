@@ -124,3 +124,8 @@ if(${COPY_BUILD_DLL_AUTORUN})
 endif()
 
 add_subdirectory(vdf)
+
+install(FILES ${CMAKE_BINARY_DIR}/plugin.vs TYPE BIN)
+install(CODE "execute_process(COMMAND powershell -file ${CMAKE_SOURCE_DIR}/vdf/Build-VDF.ps1 ${CMAKE_INSTALL_PREFIX}/bin)")
+install(CODE "execute_process(COMMAND del /y /q ${CMAKE_INSTALL_PREFIX}/bin/plugin.vs)")
+install(CODE "execute_process(COMMAND rd /s /q ${CMAKE_INSTALL_PREFIX}/bin/vdf/)")
