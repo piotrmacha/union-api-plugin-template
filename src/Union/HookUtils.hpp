@@ -16,7 +16,7 @@ namespace Union
         auto* signature = file->FindSimilarSignature(const_cast<Signature*>(&sig));
         if (!signature)
         {
-            StringANSI::Format("\u001B[33mSignature not found for {0}, returning nullptr\t{0}\u001B[0m", sig.ToString(false)).StdPrintLine();
+            StringANSI::Format("\u001B[33mSignature not found, returning nullptr\t{0}\u001B[0m", sig.ToString(false)).StdPrintLine();
             return nullptr;
         }
         return signature->GetAddress();
