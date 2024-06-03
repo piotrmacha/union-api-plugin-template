@@ -56,7 +56,7 @@ jobs:
       - name: CMake Configure
         run: cmake --preset ${{ inputs.cmake-preset }}
       - name: CMake Build
-        run: cmake --preset ${{ inputs.cmake-preset }} --build out/build/${{ inputs.cmake-preset }} --target all
+        run: cmake --build out/build/${{ inputs.cmake-preset }} --target all -j 16
       - name: CMake Install
         run: cmake --install out/build/${{ inputs.cmake-preset }} --prefix out/install/${{ inputs.cmake-preset }}
       - name: Archive DLL
