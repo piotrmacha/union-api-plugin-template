@@ -333,6 +333,33 @@ set_target_properties(${PLUGIN_LIBRARY} PROPERTIES
 
 ## GitHub Actions
 
+The template has workflows for building and releasing the plugin using GitHub Actions. You can find them in `.github/workflows/`.
+
+`build.yaml` is a reusable workflow that builds the project on a single build type. It's not executed directly but called
+by other workflows.
+
+`on-push.yaml` runs on push to "main" or "dev" branches and on Pull Requests to them. Workflows start 4 builds,
+one for every build type, to verify that the plugin compiles.
+
+`release.yaml` runs on tags starting with `v` (e.g. `v0.0.1`). Release starts 3 builds (Release, RelWithDebInfo, MinSizeRel), 
+then it creates a GitHub Release and uploads the artifacts ready to include in game. Changelog is generated automatically from
+Pull Requests. It's highly recommended to use Semantic Versioning for versions. CMake requires the format with 3 or 4 numbers
+separated by a dot (0.1.2 or 0.1.2.3) but you can freely use formats like "v0.1.2", "v0.1.2-rc3", "v0.1.2.3", "v0.1.2.3-rc4"
+because the build job strips all characters that are not a digit or a dot. As said before, best if you just use 
+[Semantic Versioning](https://semver.org/).
+
+### Run less jobs
+
+By default, each push starts 4 build jobs and every release starts 3 (+4 from the commit). If your repository is private,
+and you would like to not waste the CI minutes, you can remove some jobs from the workflows.
+
+* `on-push.yaml`: just remove the job from `jobs:` key
+* `release.yaml`: remove build job from `jobs:`, remove download action from `jobs.publish.steps:`, remove `Compress-Archive` 
+  and `Copy-Item` pair from the PowerShell script in `jobs.publish.steps.[id: prepare-release]`.
+
+You can also set up a [self-hosted runner](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
+To do it, you would need to set up 
+
 ## License
 
 The template is licensed under [MIT License](LICENSE.md). 

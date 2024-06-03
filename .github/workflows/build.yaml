@@ -37,8 +37,6 @@ jobs:
           arch: x86
           toolset: ${{ inputs.msvc-toolkit }}
           export-path-to-vcvarsall: VCVARSALL
-      - name: CMake Setup
-        uses: lukka/get-cmake@latest
       - name: Set project version
         if: ${{ inputs.project-version != 'false' }}
         env:
