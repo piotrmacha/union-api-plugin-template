@@ -341,7 +341,7 @@ have to copy the `Signatures` directory. VDF build already packs them inside the
 
 ## Linking other libraries
 
-To link other libraries you have to edit `CMakePresets.cmake`. The best place for it is right after the plugin definition.
+To link other libraries you have to edit `CMakeLists.cmake`. The best place for it is right after the plugin definition.
 ```cmake
 add_library(${PLUGIN_LIBRARY} SHARED ${PLUGIN_SOURCES})
 target_include_directories(${PLUGIN_LIBRARY} PRIVATE ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}/generated)
